@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: gioscito
+
+
+gioscito:
+  schema:
+    locations:
+      path: file:${GIOSCITA_SCHEMA_LOCATIONS_PATH:./conf/schema.yml}

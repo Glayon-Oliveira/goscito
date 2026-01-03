@@ -1,0 +1,6 @@
+
+
+gioscito:
+  schema:
+    locations:
+      path: classpath:conf/schema.yml
