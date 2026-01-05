@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.lmlasmo.gioscito.model.schema.ComponentSchema;
 import com.lmlasmo.gioscito.model.schema.FullSchema;
 import com.lmlasmo.gioscito.model.schema.StructSchema;
-import com.lmlasmo.gioscito.model.schema.type.StructFieldType;
+import com.lmlasmo.gioscito.model.schema.field.type.StructFieldType;
 
 @Component
 public class StructReferenceValidator implements SchemaValidator {

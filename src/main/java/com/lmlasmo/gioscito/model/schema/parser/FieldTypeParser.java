@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.lmlasmo.gioscito.model.schema.parser.syntax.type.ArrayTypeSyntaxParser;
-import com.lmlasmo.gioscito.model.schema.parser.syntax.type.FieldTypeSyntaxParser;
-import com.lmlasmo.gioscito.model.schema.type.FieldType;
+import com.lmlasmo.gioscito.model.schema.field.type.FieldType;
+import com.lmlasmo.gioscito.model.schema.parser.syntax.field.type.ArrayTypeSyntaxParser;
+import com.lmlasmo.gioscito.model.schema.parser.syntax.field.type.FieldTypeSyntaxParser;
 
 import jakarta.annotation.PostConstruct;
 import lombok.NonNull;

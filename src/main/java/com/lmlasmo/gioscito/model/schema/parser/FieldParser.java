@@ -1,17 +1,15 @@
 package com.lmlasmo.gioscito.model.schema.parser;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
 import com.lmlasmo.gioscito.model.schema.FieldSchema;
-import com.lmlasmo.gioscito.model.schema.constraints.FieldConstraint;
-import com.lmlasmo.gioscito.model.schema.type.FieldType;
+import com.lmlasmo.gioscito.model.schema.field.property.FieldProperty;
+import com.lmlasmo.gioscito.model.schema.field.type.FieldType;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,7 @@ public class FieldParser {
 	private static final Pattern FIELD_NAME_PATTERN = PatternConstants.TOP_COMPONENT_NAME_PATTERN;
 	
 	@NonNull private FieldTypeParser fieldTypeParser;
-	@NonNull private FieldConstraintParser fieldConstraintParser;
+	@NonNull private FieldPropertyParser fieldPropertyParser;
 	
 	public Set<FieldSchema> parse(Map<String, Object> fieldsMap) {
 		Set<FieldSchema> fieldSchemas = new HashSet<>();
@@ -59,32 +57,17 @@ public class FieldParser {
 		
 		FieldType fieldType = fieldTypeParser.parse(fieldRaw);
 		
-		return new FieldSchema(fieldName, fieldType, false, false, null, Set.of());
+		return new FieldSchema(fieldName, fieldType, Set.of());
 	}
-		
-	@SuppressWarnings("unchecked")
+	
 	private FieldSchema parseMap(String fieldName, Map<String, Object> fieldMap) {
 		FieldType fieldType = fieldTypeParser.parse(fieldMap.get("type").toString());
 		
 		if(fieldType == null) throw new KeyParserException("Key 'type' not found in field '" + fieldName);
 		
-		fieldMap.keySet().forEach(k -> {
-			if(!Set.of("type", "constraints", "unique", "required", "default").contains(k)) {
-				throw new KeyParserException("Key '" + k + "' is not supported");
-			}
-		});
+		Set<FieldProperty<?>> properties = fieldPropertyParser.parse(fieldMap, fieldType);
 		
-		Set<FieldConstraint> constraints = fieldConstraintParser.parse((List<String>) fieldMap.get("constraints"), fieldType);
-		
-		Boolean required = (Boolean) Optional.ofNullable(fieldMap.get("required")).orElse(false);
-		Boolean unique = (Boolean) Optional.ofNullable(fieldMap.get("unique")).orElse(false);
-		Object defaultValue = Optional.ofNullable(fieldMap.get("default")).orElse(null);
-		
-		if(defaultValue != null && defaultValue instanceof String value && value.equals("null")) {
-			defaultValue = null;
-		}
-		
-		return new FieldSchema(fieldName, fieldType, required, unique, defaultValue, constraints);
+		return new FieldSchema(fieldName, fieldType, properties);
 	}
 
 }
